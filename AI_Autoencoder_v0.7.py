@@ -38,12 +38,10 @@ def normalize(dataset):
         #    return scaler.fit_transform(dataset)
 
         #features & labels can be sepparate from the dataset and you can work with them separately or with both 
-        
-a = 20
 df=pd.read_excel(r'C:\Space\work\AI\data\DateSortate\FundeniATFull_cleaned.xlsx')
         #df2=pd.read_excel(r'vezi excel v3')
 
-        #Selecteaza arrayul de parametri necesar
+        #range of parameters
 train_set=df.loc[:, 'T0m':'Dp6']
 train_y=df.loc[:, 'T0m':'Dp6']
 
@@ -54,18 +52,18 @@ y=train_y.to_numpy();
         #split into samples
         #min() returns the min from each column is not specified the column
         #max() return the max from each column
-        #pentru a afisa min/max global trebuie aplicata inca o data functia
+        #for global values apply the function again on the output
 minim=min(train_set)
 maxim=max(train_set)
 
-        #normalizarea datelor
+        #data normalization
 X_normalized = normalize(X)
 
-        #nr. de linii pentru faza de testare
+        #number of samples for training
 no_test_inputs=10000
 
 
-        #randomizam ordinea datelor de intrare
+        #randomize the input features
 X_normalized,y=shuffle(X_normalized,y)
         #se creaza setul de antrenare, fara ultimele no_test_inputs randuri care vor fi folosite ulterior pentru testare
         #deci se vor crea X care va avea [-no_test_inputs] randuri + X_test care va contine [no_test_inputs]
@@ -91,15 +89,15 @@ y_train, y_test = numpy.split(y, [-no_test_inputs])
     # =============================================================================
 
 
-        #input layer - 35 = rangul dimensiunii care este un match pentru parametrii (pentru features)
+        #input layer - 35 = dimension rang (usually match the number of parameters)
 input1=tf.keras.layers.Input( shape=(35,) )
 
-        # Add Gaussian noise (0.1 is the standard deviation of the noise)
+        # add Gaussian noise (0.1 is the standard deviation of the noise)
 
 noisy_input = tf.keras.layers.GaussianNoise(0.1)(input1)
 
-        #Autoencoder structure 
-        #Encoder
+        #autoencoder structure 
+        #encoder
 dense1_layer1 = tf.keras.layers.Dense(35, activation='relu', kernel_regularizer=tf.keras.regularizers.l1_l2(l1=0, l2=0))(noisy_input)
 
         #dropout
@@ -135,7 +133,7 @@ history=History()
 callback=tf.keras.callbacks.EarlyStopping(monitor='val_loss',patience=600,restore_best_weights = True)
 
 
-        #a fost schimbat loss function din mean_absolute_error in mean_squared_error in v0.3 =
+        #a fost schimbat loss function din mean_absolute_error in mean_squared_error in v0.3 = pentru perfomante mai bune
 autoencoder.compile(optimizer='Nadam', loss='mean_squared_error',metrics=['mean_squared_logarithmic_error','mae','RootMeanSquaredError' ])
 
         # Add noise to your training data

@@ -18,7 +18,7 @@ from keras.callbacks import History
 from sklearn.preprocessing import StandardScaler
 
 
-        #Noise implementation = pentru a imbunatati capacitatea de prezicere pe valori blind
+        #Consider using noise implementation resulting in better performances
 def add_noise(X, noise_factor=0.2):
     noise = noise_factor * np.random.normal(loc=0.0, scale=1.0, size=X.shape)
     X_noisy = X + noise
@@ -26,20 +26,20 @@ def add_noise(X, noise_factor=0.2):
     return X_noisy
 
 
-        #1st try with MinMaxScaler
+        #Normalize the data with any scaler you want
 def normalize(dataset): 
     scaler = MinMaxScaler()
     return scaler.fit_transform(dataset)
 
-       #2nd try with another normalization - StandardNormalize
+       #StandardNormalize
    
     #def normalize(dataset):
         #    scaler = StandardScaler()
         #    return scaler.fit_transform(dataset)
 
-
-        #In cazul unui autoencoder datorita faptului ca acestea incearca sa reconstruiasca datele de intrare  
-        #in datele de iesire, features & labels pot fi identice si pot fi luate din acelasi excel; 
+        #features & labels can be sepparate from the dataset and you can work with them separately or with both 
+        
+a = 20
 df=pd.read_excel(r'C:\Space\work\AI\data\DateSortate\FundeniATFull_cleaned.xlsx')
         #df2=pd.read_excel(r'vezi excel v3')
 
